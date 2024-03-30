@@ -1,33 +1,57 @@
-
 class Car{
     pass: number; // Passageiros
-    passMax: number; // limite de Passageiros
-    gas: number; // tanque
-    gasMax: number; // limite do tanque
-    km: number; // quantidade de quilometragem
+    passMax: number; // limite de Passa
 
     constructor() {
+        this.pass = 0;
+        this.passMax = 2;
+        this.gas = 0;
+        this.gasMax = 100;
+        this.km = 0;
     }
 
     enter(): void {
+        if (this.pass < this.passMax) 
+            this.pass += 1;
+        else console.log("fail: limite de pessoas atingido");
     }
 
     leave(): void {
+        if (this.pass > 0) 
+            this.pass -= 1;
+        else console.log("fail: nao ha ninguem no carro");
     }
 
     fuel(gas: number): void {
+        this.gas += gas;
+        if (this.gas > this.gasMax)
+            this.gas = this.gasMax;
     }
     
-    drive (km: number): void {
-    }
-
     toString(): string {
+        let texto: string = ("pass: " + this.pass + ", gas: " + this.gas + ", km: " + this.km);
+        return texto;
+    }
+    
+    drive (km: int): void {
+        if (this.pass == 0)
+            console.log("fail: nao ha ninguem no carro");
+        else if (this.gas == 0)
+                console.log("fail: tanque vazio");
+        else if (this.gas < km) {
+                console.log("fail: tanque vazio apos andar " + this.gas + " km");
+                this.km += this.gas;
+                this.gas = 0;
+        }    
+        else {
+            this.gas -= km;
+            this.km += km;
+        }
     }
 };
 
 
-let _cin_ : string[] = [];
-try { _cin_ = require("fs").readFileSync(0).toString().split(/\r?\n/); } catch(e){}
+let _cin_: string[] = require("fs").readFileSync(0).toString().split("\n");
 let input = () : string => _cin_.length === 0 ? "" : _cin_.shift()!;
 let write = (text: any, end:string="\n")=> process.stdout.write("" + text + end);
 
@@ -50,4 +74,3 @@ function main() {
 }
 
 main()
-

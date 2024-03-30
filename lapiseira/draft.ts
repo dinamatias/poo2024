@@ -47,18 +47,62 @@ class Pencil {
     private barrel: Array<Lead> = new Array<Lead>(); //grafites no cano
 
     public constructor(thickness: number) {
+        this.thickness = thickness;
+        this.tip = null;
+        this.barrel = [];
     }
 
     public insert(lead: Lead): boolean {
+        if(lead.getThickness() != this.thickness) {
+            console.log("fail: calibre incompatível")
+            return false;
+        }
+        this.barrel.push(lead);
+        return true;
     }
 
     public remove(): Lead | null {
+        if(this.tip == null) {
+            return null;
+        }
+        let grafiteRemovido = this.tip;
+        this.tip = null;
+        return grafiteRemovido;
     }
 
     public pull(): boolean {
+        if(this.barrel.length == 0) {
+            return false;
+        }
+        if(this.tip != null) {
+            console.log("fail: ja existe grafite no bico");
+            return false;
+        }
+   
+        this.tip = this.barrel.shift()!;
+        return true;
+        
+        
     }
-
+    
     public writePage(): void {
+        if(this.tip == null) {
+            console.log("fail: nao existe grafite no bico");
+            return;
+        }
+        if(this.tip.getSize() <= 10) {
+            console.log("fail: tamanho insuficiente");
+            return;
+        }
+        let grafiteUsado = this.tip.getSize() - this.tip.usagePerSheet();
+
+        if(grafiteUsado < 10) {
+            this.tip.setSize(10);
+            console.log("fail: folha incompleta");
+            return;
+        }
+
+        this.tip.setSize(grafiteUsado);
 
     }
     public toString(): string {
@@ -71,7 +115,11 @@ class Pencil {
 
         return saida;
     }
+
+
 }
+    
+
 
 let _cin_ : string[] = [];
 try { _cin_ = require("fs").readFileSync(0).toString().split(/\r?\n/); } catch(e){}
